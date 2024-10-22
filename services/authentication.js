@@ -10,13 +10,11 @@ function createTokenForUser(user) {
     role: user.role,
   };
 
-  const token = JWT.sign(payload, secret);
-  return token;
+  return JWT.sign(payload, secret);
 }
 
 function validateToken(token) {
-  const payload = JWT.verify(token, secret);
-  return payload;
+  return JWT.verify(token, secret);
 }
 
 module.exports = {

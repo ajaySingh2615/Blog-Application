@@ -18,44 +18,41 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// Add new blog form route
 router.get("/add-new", (req, res) => {
-  return res.render("addBlog", {
-    user: req.user,
-  });
+  res.render("addBlog", { user: req.user });
 });
 
+// Fetch blog details with comments and related blogs
 router.get("/:id", async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id).populate("createdBy");
     const comments = await Comment.find({ blogId: req.params.id }).populate(
       "createdBy"
     );
+    blog.tags = blog.tags || []; // Ensure tags array is always defined
 
-    // Ensure tags and relatedBlogs arrays are always defined
-    blog.tags = blog.tags || [];
-
-    // Find related blogs based on tags or category (example logic)
+    // Fetch related blogs based on matching tags
     const relatedBlogs = await Blog.find({
-      _id: { $ne: blog._id }, // Exclude the current blog
-      tags: { $in: blog.tags }, // Blogs with similar tags
-    }).limit(3); // Limit to 3 related blogs
+      _id: { $ne: blog._id }, // Exclude current blog
+      tags: { $in: blog.tags },
+    }).limit(3); // Limit related blogs
 
-    return res.render("blog", {
+    res.render("blog", {
       user: req.user,
       blog,
       comments,
-      relatedBlogs, // Pass related blogs to the template
+      relatedBlogs,
     });
   } catch (error) {
     console.error("Error fetching blog:", error);
-    return res.status(500).send("Error loading the blog");
+    res.status(500).send("Error loading the blog");
   }
 });
 
+// Add a new comment
 router.post("/comment/:blogId", async (req, res) => {
-  if (!req.user) {
-    return res.status(401).send("Unauthorized: Please log in to comment.");
-  }
+  if (!req.user) return res.status(401).send("Unauthorized: Please log in.");
 
   try {
     await Comment.create({
@@ -63,23 +60,38 @@ router.post("/comment/:blogId", async (req, res) => {
       blogId: req.params.blogId,
       createdBy: req.user._id,
     });
-    return res.redirect(`/blog/${req.params.blogId}`);
+    res.redirect(`/blog/${req.params.blogId}`);
   } catch (error) {
-    console.error("Error creating comment:", error);
-    return res.status(500).send("Internal Server Error");
+    console.error("Error adding comment:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
+// Create a new blog with image upload
 router.post("/", upload.single("coverImage"), async (req, res) => {
   const { title, body } = req.body;
   const blog = await Blog.create({
-    body,
     title,
+    body,
     createdBy: req.user._id,
     coverImageURL: `/uploads/${req.file.filename}`,
   });
-  console.log(req.file);
-  return res.redirect(`/blog/${blog._id}`);
+  res.redirect(`/blog/${blog._id}`);
+});
+
+// Like a blog
+router.post("/like/:blogId", async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.blogId);
+    if (!blog) return res.status(404).send("Blog not found");
+
+    blog.likes += 1;
+    await blog.save();
+    res.status(200).json({ likes: blog.likes });
+  } catch (error) {
+    console.error("Error liking the blog:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 module.exports = router;

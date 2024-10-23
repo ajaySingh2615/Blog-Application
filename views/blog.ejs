@@ -1,203 +1,206 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <%- include('./partials/header') %>
     <title>Blog Page</title>
     <style>
-      /* General Styling */
-      body {
-        background-color: #121212;
-        color: #e0e0e0;
-        font-family: 'Poppins', sans-serif;
-      }
+        body {
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
 
-      /* Blog Title */
-      h1 {
-        text-align: center;
-        font-size: 2.5rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-      }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
 
-      /* Blog Image and Content */
-      img {
-        display: block;
-        margin: 15px auto;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 700px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-      }
+        img {
+            display: block;
+            margin: 15px auto;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 700px; /* Ensure images are not too large */
+            height: auto; /* Maintain aspect ratio */
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
 
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+        .tags {
+            text-align: center;
+            margin-top: 10px;
+        }
 
-      /* Tag Badges */
-      .tags {
-        text-align: center;
-        margin-top: 10px;
-      }
+        .tag {
+            background-color: #1f1f1f;
+            padding: 6px 12px;
+            border-radius: 15px;
+            margin: 5px;
+            color: #1e90ff;
+            display: inline-block; /* Prevents tags from stacking */
+        }
 
-      .tag {
-        background-color: #1f1f1f;
-        padding: 6px 12px;
-        margin: 5px;
-        border-radius: 15px;
-        display: inline-block;
-        color: #1e90ff;
-      }
+        .author-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #1c1c1c;
+            border-radius: 25px;
+            max-width: 700px; /* Limit width for a premium look */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
 
-      /* Author Section */
-      .author-badge {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #1c1c1c;
-        padding: 8px 15px;
-        border-radius: 25px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        margin: 20px auto;
-        gap: 10px;
-        width: fit-content;
-      }
+        .author-badge img {
+            width: 50px; /* Set a fixed size for author images */
+            height: 50px;
+            border-radius: 50%; /* Make the image circular */
+            margin-right: 10px; /* Space between image and name */
+        }
 
-      .author-badge img {
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-      }
+        .share-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
 
-      /* Like Button */
-      .like-button {
-        background-color: transparent;
-        color: #e0e0e0;
-        border: none;
-        cursor: pointer;
-        font-size: 1.2rem;
-        margin-left: 10px;
-      }
+        .share-button {
+            background-color: #1f1f1f;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none; /* Remove default border */
+            color: #e0e0e0; /* Light text for buttons */
+            transition: background-color 0.3s; /* Add transition for hover effect */
+        }
 
-      .like-button:hover {
-        color: #1e90ff;
-      }
+        .share-button:hover {
+            background-color: #1e90ff; /* Change color on hover */
+        }
 
-      /* Social Share Section */
-      .share-buttons {
-        text-align: center;
-        margin: 20px 0;
-      }
+        .comments-section {
+            margin-top: 40px;
+            background-color: #1c1c1c; /* Lighten background for comments */
+            padding: 20px; /* Add padding */
+            border-radius: 8px;
+        }
 
-      .share-button {
-        background-color: #1f1f1f;
-        color: #e0e0e0;
-        border: none;
-        padding: 10px;
-        margin: 5px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
+        .comment-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px; /* Space between comments */
+            padding: 10px;
+            border: 1px solid #444; /* Border around comments */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #222; /* Dark background for comments */
+        }
 
-      .share-button:hover {
-        background-color: #007acc;
-      }
+        .comment-card img {
+            width: 30px; /* Set a fixed size for comment images */
+            height: 30px;
+            border-radius: 50%; /* Make the image circular */
+            margin-right: 10px; /* Space between image and text */
+        }
 
-      /* Comment Section Cards */
-      .comment-card {
-        background-color: #1f1f1f;
-        padding: 15px;
-        border-radius: 12px;
-        margin-bottom: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
+        form {
+            margin-bottom: 20px; /* Space below form */
+            display: flex; /* Align input and button */
+            justify-content: center; /* Center items */
+        }
 
-      .comment-card img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-      }
+        form input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none; /* Remove default border */
+            margin-right: 10px; /* Space between input and button */
+            flex: 1; /* Allow input to grow */
+        }
 
-      /* Related Blogs Section */
-      .related-posts {
-        margin-top: 40px;
-      }
+        form button {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none; /* Remove default border */
+            background-color: #1e90ff; /* Blue button */
+            color: #fff; /* White text */
+            cursor: pointer; /* Pointer on hover */
+        }
 
-      .related-post-card {
-        background-color: #1f1f1f;
-        border-radius: 12px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-
-      .related-post-card:hover {
-        background-color: #252525;
-      }
+        form button:hover {
+            background-color: #1c78d2; /* Darker blue on hover */
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <%- include('./partials/nav') %>
 
     <div class="container">
-      <h1><%= blog.title %></h1>
-      <img src="<%= blog.coverImageURL %>" alt="<%= blog.title %>">
-      <div class="tags">
-        <% blog.tags.forEach(tag => { %>
-          <span class="tag"><%= tag %></span>
-        <% }) %>
-      </div>
-      <pre><%= blog.body %></pre>
+        <h1><%= blog.title %></h1>
+        <img src="<%= blog.coverImageURL %>" alt="<%= blog.title %>">
+        <div class="tags">
+            <% blog.tags.forEach(tag => { %>
+                <span class="tag"><%= tag %></span>
+            <% }) %>
+        </div>
+        <pre><%= blog.body %></pre>
     </div>
 
     <div class="author-badge">
-      <img src="<%= blog.createdBy.profileImageURL %>" alt="<%= blog.createdBy.fullName %>">
-      <span><%= blog.createdBy.fullName %></span>
-      <button class="like-button">❤️ Like</button>
+        <img src="<%= blog.createdBy.profileImageURL %>" alt="<%= blog.createdBy.fullName %>">
+        <span><%= blog.createdBy.fullName %></span>
+        <button class="like-button" onclick="likeBlog('<%= blog._id %>')">❤️ Like</button>
     </div>
 
     <div class="share-buttons">
-      <button class="share-button">Share on Facebook</button>
-      <button class="share-button">Share on Twitter</button>
-      <button class="share-button">Copy Link</button>
+        <button class="share-button" onclick="shareOnFacebook()">Share on Facebook</button>
+        <button class="share-button" onclick="shareOnTwitter()">Share on Twitter</button>
+        <button class="share-button" onclick="copyLink()">Copy Link</button>
     </div>
 
     <div class="container comments-section">
-      <h1>Comments (<%= comments.length %>)</h1>
-      <% if (locals.user) { %>
-        <form action="/blog/comment/<%= blog._id %>" method="post">
-          <input type="text" name="content" placeholder="Enter your comment">
-          <button class="btn btn-primary" type="submit">Add</button>
-        </form>
-      <% } %>
-
-      <% comments.forEach(comment => { %>
-        <div class="comment-card">
-          <img src="<%= comment.createdBy.profileImageURL %>" alt="comment">
-          <div>
-            <p><strong><%= comment.createdBy.fullName %>:</strong> <%= comment.content %></p>
-            <div class="comment-time">Posted at: <%= comment.createdAt.toLocaleString() %></div>
-          </div>
-        </div>
-      <% }) %>
+        <h1>Comments (<%= comments.length %>)</h1>
+        <% if (locals.user) { %>
+            <form action="/blog/comment/<%= blog._id %>" method="post">
+                <input type="text" name="content" placeholder="Enter your comment" required>
+                <button type="submit">Add</button>
+            </form>
+        <% } %>
+        <% comments.forEach(comment => { %>
+            <div class="comment-card">
+                <img src="<%= comment.createdBy.profileImageURL %>" alt="comment">
+                <p><strong><%= comment.createdBy.fullName %>:</strong> <%= comment.content %></p>
+            </div>
+        <% }) %>
     </div>
 
-    <div class="container related-posts">
-      <h1>Related Blogs</h1>
-      <% relatedBlogs.forEach(blog => { %>
-        <div class="related-post-card">
-          <h3><%= blog.title %></h3>
-          <p><%= blog.excerpt %></p>
-          <a href="/blog/<%= blog._id %>" class="btn btn-secondary">Read More</a>
-        </div>
-      <% }) %>
-    </div>
+    <script>
+        function copyLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url);
+            alert("Link copied to clipboard!");
+        }
 
-    <%- include('./partials/scripts') %>
-  </body>
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+        }
+
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://twitter.com/intent/tweet?url=${url}`, "_blank");
+        }
+
+        async function likeBlog(blogId) {
+            try {
+                const res = await fetch(`/blog/like/${blogId}`, { method: "POST" });
+                const data = await res.json();
+                alert(`Blog liked! Total likes: ${data.likes}`);
+            } catch (error) {
+                console.error("Error liking blog:", error);
+            }
+        }
+    </script>
+</body>
 </html>

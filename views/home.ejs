@@ -1,29 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <%- include('./partials/header') %>
     <title>Home Page</title>
-</head>
-<body>
-<%- include('./partials/nav') %>
+    <style>
+      /* Dark Theme Background */
+      body {
+        background-color: #121212;
+        color: white;
+      }
 
-<div class="container mt-3">
-    <div class="row row-cols-3">
+      /* Styling the Card */
+      .card {
+        background-color: #1e1e1e;
+        border: 1px solid #444;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+      }
+
+      /* Card Image */
+      .card-img-top {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      /* Card Title */
+      .card-title {
+        color: #1e90ff;
+        font-weight: bold;
+      }
+
+      /* View Button */
+      .btn-primary {
+        background-color: #1e90ff;
+        border: none;
+        width: 100%;
+      }
+
+      .btn-primary:hover {
+        background-color: #1c86e2;
+      }
+
+      /* Row Styling */
+      .row {
+        gap: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container mt-3">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
         <% blogs.forEach(blog => { %>
-            <div class="col">
-                <div class="card col" style="width: 18rem;">
-                    <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="<%= blog.title %>">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= blog.title %></h5>
-                        <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
-                    </div>
-                </div>
+          <div class="col">
+            <div class="card">
+              <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="<%= blog.title %>">
+              <div class="card-body">
+                <h5 class="card-title"><%= blog.title %></h5>
+                <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+              </div>
             </div>
+          </div>
         <% }) %>
+      </div>
     </div>
-</div>
 
-<%= JSON.stringify(blogs) %>
-<%- include('./partials/scripts') %>
-</body>
+    <%- include('./partials/scripts') %>
+  </body>
 </html>

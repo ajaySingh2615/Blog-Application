@@ -1,3 +1,4 @@
+require("dotenv").config();
 const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -8,15 +9,16 @@ const blogRoute = require("./routes/blog");
 const {
   checkForAuthenticationCookie,
 } = require("./middlewares/authentication");
+const connectDB = require("./db");
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // Connect to MongoDB
-mongoose
-  .connect("mongodb://localhost:27017/blogify")
-  .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.error("MongoDB connection error:", error));
+// mongoose
+//   .connect(process.env.MONGO_URL)
+//   .then(() => console.log("MongoDB connected"))
+//   .catch((error) => console.error("MongoDB connection error:", error));
 
 // Set view engine and views directory
 app.set("view engine", "ejs");
@@ -49,6 +51,12 @@ app.use("/user", userRoute); // These routes will now have access to req.user if
 app.use("/blog", blogRoute);
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("MongoDb connection error ", err);
+  });

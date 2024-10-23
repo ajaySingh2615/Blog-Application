@@ -25,16 +25,31 @@ router.get("/add-new", (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const blog = await Blog.findById(req.params.id).populate("createdBy");
-  const comments = await Comment.find({ blogId: req.params.id }).populate(
-    "createdBy"
-  );
-  console.log(comments);
-  return res.render("blog", {
-    user: req.user,
-    blog,
-    comments,
-  });
+  try {
+    const blog = await Blog.findById(req.params.id).populate("createdBy");
+    const comments = await Comment.find({ blogId: req.params.id }).populate(
+      "createdBy"
+    );
+
+    // Ensure tags and relatedBlogs arrays are always defined
+    blog.tags = blog.tags || [];
+
+    // Find related blogs based on tags or category (example logic)
+    const relatedBlogs = await Blog.find({
+      _id: { $ne: blog._id }, // Exclude the current blog
+      tags: { $in: blog.tags }, // Blogs with similar tags
+    }).limit(3); // Limit to 3 related blogs
+
+    return res.render("blog", {
+      user: req.user,
+      blog,
+      comments,
+      relatedBlogs, // Pass related blogs to the template
+    });
+  } catch (error) {
+    console.error("Error fetching blog:", error);
+    return res.status(500).send("Error loading the blog");
+  }
 });
 
 router.post("/comment/:blogId", async (req, res) => {

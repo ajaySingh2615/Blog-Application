@@ -1,32 +1,178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <%- include('./partials/header') %>
     <title>Add New Blog</title>
-</head>
-<body>
-<%- include('./partials/nav') %>
+    <style>
+      body {
+        background: linear-gradient(135deg, #121212, #1f1f1f);
+        color: #e0e0e0;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
 
-<div class="container mt-3">
-    <form action="/blog" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="cover-image" class="form-label">Cover-Image</label>
-            <input type="file" class="form-control" id="cover-image" name="coverImage" aria-describedby="cover-image">
-        </div>
-        <div class="mb-3">
+      /* Flexbox parent to center container */
+      .page-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 60px); /* Subtract navbar height */
+        padding-top: 60px; /* Adjust if needed for navbar */
+      }
+
+      .container {
+        max-width: 600px;
+        padding: 30px;
+        background: linear-gradient(135deg, #1c1c1c, #2a2a2a);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        transition: transform 0.2s;
+      }
+
+      .container:hover {
+        transform: scale(1.02);
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #1e90ff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .form-label {
+        color: #1e90ff;
+        font-weight: 600;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-control {
+        background-color: #2a2a2a;
+        border: 1px solid #444;
+        color: #e0e0e0;
+        border-radius: 6px;
+        padding: 12px;
+        transition: border-color 0.2s;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+      }
+
+      .form-control:focus {
+        background-color: #2a2a2a;
+        border-color: #1e90ff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #1e90ff, #3e9cff);
+        border: none;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition:
+          background 0.3s,
+          transform 0.2s;
+        cursor: pointer;
+        width: 100%;
+        letter-spacing: 1px;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #1c7bd4, #3584e6);
+        transform: translateY(-2px);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .mb-3 {
+        margin-bottom: 20px;
+      }
+
+      textarea {
+        resize: none;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .form-label {
+          font-size: 1rem;
+        }
+
+        .form-control {
+          font-size: 0.9rem;
+        }
+
+        .btn-primary {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="page-wrapper">
+      <div class="container mt-3">
+        <h1>Add New Blog</h1>
+        <form action="/blog" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="cover-image" class="form-label">Cover Image</label>
+            <input
+              type="file"
+              class="form-control"
+              id="cover-image"
+              name="coverImage"
+              aria-describedby="cover-image"
+              accept="image/*"
+              required
+            />
+          </div>
+          <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" aria-describedby="title">
-        </div>
-        <div class="mb-3">
-            <label for="body">Body</label>
-            <textarea name="body" class="form-control" id="body"></textarea>
-        </div>
-        <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              aria-describedby="title"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="body" class="form-label">Body</label>
+            <textarea
+              name="body"
+              class="form-control"
+              id="body"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+          <div class="mb-3">
             <button class="btn btn-primary">Submit</button>
-        </div>
-    </form>
-</div>
+          </div>
+        </form>
+      </div>
+    </div>
 
-<%- include('./partials/scripts') %>
-</body>
+    <%- include('./partials/scripts') %>
+  </body>
 </html>

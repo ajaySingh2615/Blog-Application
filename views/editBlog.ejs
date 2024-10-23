@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('./partials/header') %>
+    <title>Edit Blog</title>
+    <style>
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+        font-family: "Poppins", sans-serif;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+
+      .container {
+        max-width: 700px; /* Limit the width of the form */
+        margin: 0 auto; /* Center the container */
+        background-color: #1c1c1c; /* Dark background for the form */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column; /* Align elements vertically */
+        gap: 15px; /* Space between form elements */
+      }
+
+      input[type="text"],
+      textarea,
+      input[type="file"] {
+        padding: 10px;
+        border: none; /* Remove default border */
+        border-radius: 8px; /* Rounded corners */
+        background-color: #2a2a2a; /* Darker input background */
+        color: #e0e0e0; /* Light text */
+        font-size: 1rem;
+        resize: vertical; /* Allow vertical resize for textarea */
+      }
+
+      input[type="text"]::placeholder,
+      textarea::placeholder {
+        color: #a0a0a0; /* Placeholder color */
+      }
+
+      button {
+        padding: 10px 15px;
+        border: none; /* Remove default border */
+        border-radius: 8px; /* Rounded corners */
+        background-color: #1e90ff; /* Blue background */
+        color: white; /* White text */
+        font-size: 1rem;
+        cursor: pointer; /* Pointer on hover */
+        transition: background-color 0.3s; /* Smooth transition */
+      }
+
+      button:hover {
+        background-color: #4aa3ff; /* Lighter blue on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container">
+      <h1>Edit Blog</h1>
+      <form
+        action="/blog/edit/<%= blog._id %>"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <input
+          type="text"
+          name="title"
+          value="<%= blog.title %>"
+          placeholder="Blog Title"
+          required
+        />
+        <textarea name="body" rows="10" placeholder="Blog Content" required>
+<%= blog.body %></textarea
+        >
+        <input type="file" name="coverImage" />
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </body>
+</html>

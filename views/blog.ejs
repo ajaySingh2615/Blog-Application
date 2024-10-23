@@ -10,6 +10,7 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 20px;
+            position: relative; /* Set positioning for absolute elements inside */
         }
 
         h1 {
@@ -59,6 +60,56 @@
             height: 50px;
             border-radius: 50%; /* Make the image circular */
             margin-right: 10px; /* Space between image and name */
+        }
+
+        .buttons-container {
+            position: fixed; /* Use fixed positioning to keep buttons visible */
+            top: 150px; /* Position from the top */
+            right: 20px; /* Position from the right edge */
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 10px; /* Space between buttons */
+            transition: right 0.3s ease; /* Smooth transition for sliding */
+        }
+
+        /* Make buttons visible on hover */
+        .buttons-container:hover {
+            transform: scale(1.05); /* Slightly scale buttons on hover */
+        }
+
+        .edit-button, .delete-button, .like-button {
+            background-color: #1e90ff; /* Blue background */
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s ease-in-out;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+        }
+
+        .edit-button:hover {
+            background-color: #4aa3ff; /* Lighter blue on hover */
+            transform: scale(1.05); /* Slight zoom effect */
+        }
+
+        .delete-button {
+            background-color: #ff4a4a; /* Red background */
+        }
+
+        .delete-button:hover {
+            background-color: #ff7878; /* Lighter red on hover */
+            transform: scale(1.05); /* Slight zoom effect */
+        }
+
+        .like-button {
+            background-color: #28a745; /* Green background */
+        }
+
+        .like-button:hover {
+            background-color: #5cb85c; /* Lighter green on hover */
+            transform: scale(1.05); /* Slight zoom effect */
         }
 
         .share-buttons {
@@ -150,8 +201,21 @@
     <div class="author-badge">
         <img src="<%= blog.createdBy.profileImageURL %>" alt="<%= blog.createdBy.fullName %>">
         <span><%= blog.createdBy.fullName %></span>
-        <button class="like-button" onclick="likeBlog('<%= blog._id %>')">❤️ Like</button>
     </div>
+
+    <% if (user && user._id.toString() === blog.createdBy._id.toString()) { %>
+        <div class="buttons-container">
+            <button class="like-button" onclick="likeBlog('<%= blog._id %>')">👍 Like</button>
+            <button onclick="location.href='/blog/edit/<%= blog._id %>'" class="edit-button">
+                ✏️ Edit
+            </button>
+            <form action="/blog/delete/<%= blog._id %>" method="POST" style="display:inline;">
+                <button type="submit" class="delete-button">
+                    🗑️ Delete
+                </button>
+            </form>
+        </div>
+    <% } %>
 
     <div class="share-buttons">
         <button class="share-button" onclick="shareOnFacebook()">Share on Facebook</button>
@@ -184,21 +248,21 @@
 
         function shareOnFacebook() {
             const url = encodeURIComponent(window.location.href);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
         }
 
         function shareOnTwitter() {
             const url = encodeURIComponent(window.location.href);
-            window.open(`https://twitter.com/intent/tweet?url=${url}`, "_blank");
+            window.open(`https://twitter.com/share?url=${url}`, '_blank');
         }
 
         async function likeBlog(blogId) {
             try {
-                const res = await fetch(`/blog/like/${blogId}`, { method: "POST" });
-                const data = await res.json();
-                alert(`Blog liked! Total likes: ${data.likes}`);
+                const response = await fetch(`/blog/like/${blogId}`, { method: 'POST' });
+                const data = await response.json();
+                alert(`Total likes: ${data.totalLikes}`);
             } catch (error) {
-                console.error("Error liking blog:", error);
+                console.error("Error liking the blog:", error);
             }
         }
     </script>

@@ -94,4 +94,64 @@ router.post("/like/:blogId", async (req, res) => {
   }
 });
 
+// Middleware to verify ownership
+const isAuthor = async (req, res, next) => {
+  try {
+    const blog = await Blog.findById(req.params.blogId);
+    if (!blog) return res.status(404).send("Blog not found");
+    if (blog.createdBy.toString() !== req.user._id.toString())
+      return res.status(403).send("Unauthorized");
+
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+// Edit Blog Form
+router.get("/edit/:blogId", isAuthor, async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.blogId);
+    res.render("editBlog", { blog });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error loading edit form");
+  }
+});
+
+// Update Blog
+router.post(
+  "/edit/:blogId",
+  isAuthor,
+  upload.single("coverImage"),
+  async (req, res) => {
+    try {
+      const { title, body } = req.body;
+      const update = { title, body };
+
+      if (req.file) {
+        update.coverImageURL = `/uploads/${req.file.filename}`;
+      }
+
+      await Blog.findByIdAndUpdate(req.params.blogId, update);
+      res.redirect(`/blog/${req.params.blogId}`);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error updating blog");
+    }
+  }
+);
+
+// Delete Blog
+router.post("/delete/:blogId", isAuthor, async (req, res) => {
+  try {
+    await Blog.findByIdAndDelete(req.params.blogId);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error deleting blog");
+  }
+});
+
 module.exports = router;

@@ -25,15 +25,17 @@ app.set("views", path.resolve("./views"));
 // Middleware setup
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(checkForAuthenticationCookie("token"));
 app.use(express.static(path.resolve("./public")));
+
+// Apply Authentication Middleware Globally
+app.use(checkForAuthenticationCookie("token")); // Applied globally here
 
 // Home route to display all blogs
 app.get("/", async (req, res) => {
   try {
     const allBlogs = await Blog.find({});
     res.render("home", {
-      user: req.user,
+      user: req.user, // User will be available if authenticated
       blogs: allBlogs,
     });
   } catch (error) {
@@ -43,7 +45,7 @@ app.get("/", async (req, res) => {
 });
 
 // User and Blog routes
-app.use("/user", userRoute);
+app.use("/user", userRoute); // These routes will now have access to req.user if authenticated
 app.use("/blog", blogRoute);
 
 // Start the server
